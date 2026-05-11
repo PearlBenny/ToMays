@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>يوم ميس المميز</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #E1F5FE;
+            --text-main: #01579B;
+            --text-light: #0288D1;
+            --accent-color: #03A9F4;
+            --card-bg: #FFFFFF;
+            --glow-color: rgba(3, 169, 244, 0.3);
+            --track-color: #B3E5FC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* غيوم عشوائية في الخلفية */
+        .clouds-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+            animation: moveClouds linear infinite;
+        }
+        .bg-cloud::before, .bg-cloud::after {
+            content: ''; position: absolute; background: inherit; border-radius: 50%;
+        }
+        .cloud-shape { width: 100px; height: 35px; }
+        .cloud-shape::before { width: 45px; height: 45px; top: -20px; left: 15px; }
+        .cloud-shape::after { width: 55px; height: 55px; top: -25px; right: 15px; }
+
+        .c1 { top: 5%; left: -100px; animation-duration: 30s; opacity: 0.6; }
+        .c2 { top: 25%; left: -100px; animation-duration: 45s; animation-delay: 5s; opacity: 0.4; }
+        .c3 { top: 50%; left: -100px; animation-duration: 35s; animation-delay: 10s; opacity: 0.7; }
+        .c4 { top: 80%; left: -100px; animation-duration: 50s; animation-delay: 2s; opacity: 0.5; }
+        .c5 { top: 15%; left: -100px; animation-duration: 40s; animation-delay: 15s; opacity: 0.3; }
+
+        @keyframes moveClouds {
+            0% { transform: translateX(-150px); }
+            100% { transform: translateX(110vw); }
+        }
+
+        .screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+        }
+
+        /* زر الغيمة الأبيض */
+        .cloud-btn-wrapper {
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.05));
+        }
+        .cloud-btn-wrapper:active { transform: scale(0.95); }
+
+        .cloud-btn {
+            background: #FFFFFF;
+            color: var(--text-main);
+            width: 160px; height: 55px;
+            border-radius: 40px;
+            font-size: 1.1rem; font-weight: 700;
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+        }
+        .cloud-btn::before, .cloud-btn::after {
+            content: ''; position: absolute; background: #FFFFFF; border-radius: 50%; z-index: -1;
+        }
+        .cloud-btn::before { width: 50px; height: 50px; top: -20px; left: 25px; }
+        .cloud-btn::after { width: 70px; height: 70px; top: -30px; right: 20px; }
+
+        /* الشاشات */
+        #intro-screen { z-index: 10; text-align: center; }
+        .name-title { font-size: 3.5rem; margin-bottom: 1rem; }
+        .intro-text { font-size: 1.2rem; margin-bottom: 4rem; }
+
+        #main-screen { opacity: 0; pointer-events: none; z-index: 5; padding-top: 3rem; justify-content: flex-start; }
+        #main-screen.active { opacity: 1; pointer-events: all; position: relative; }
+
+        .audio-cards-container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem; }
+        .audio-card {
+            background: var(--card-bg);
+            padding: 1rem; border-radius: 18px;
+            display: flex; align-items: center; gap: 0.8rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .emoji-avatar { font-size: 1.8rem; flex-shrink: 0; }
+        .audio-info { flex-grow: 1; }
+        .audio-info h3 { font-size: 1rem; margin-bottom: 5px; }
+
+        /* خانة رسالة ريم */
+        .text-card {
+            background: #fff; padding: 1.2rem; border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border-right: 4px solid var(--accent-color);
+            margin-bottom: 2rem; width: 100%; max-width: 400px;
+        }
+        .text-card h3 { font-size: 1rem; margin-bottom: 8px; color: var(--accent-color); }
+        .text-card p { font-size: 0.95rem; line-height: 1.6; }
+
+        .progress-track { width: 100%; height: 4px; background: var(--track-color); border-radius: 2px; position: relative; }
+        .progress-fill { position: absolute; top: 0; right: 0; height: 100%; background: var(--accent-color); width: 0%; }
+        .play-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--text-main); color: #fff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .play-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+        #final-screen { opacity: 0; pointer-events: none; text-align: center; }
+        #final-screen.active { opacity: 1; pointer-events: all; position: relative; }
+        .final-msg { font-size: 1.5rem; font-weight: 700; color: var(--text-main); line-height: 1.6; padding: 20px; }
+
+        .hide-intro { opacity: 0 !important; transform: translateY(-20px); pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <div class="clouds-container">
+        <div class="bg-cloud cloud-shape c1"></div>
+        <div class="bg-cloud cloud-shape c2"></div>
+        <div class="bg-cloud cloud-shape c3"></div>
+        <div class="bg-cloud cloud-shape c4"></div>
+        <div class="bg-cloud cloud-shape c5"></div>
+    </div>
+
+    <section id="intro-screen" class="screen">
+        <h1 class="name-title">ميس</h1>
+        <p class="intro-text">في حدا اليوم بستاهل شوي اهتمام زيادة...</p>
+        <div class="cloud-btn-wrapper" id="start-btn">
+            <div class="cloud-btn">اكبسي الزر</div>
+        </div>
+    </section>
+
+    <section id="main-screen" class="screen">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">كل سنة وانتي بخير...</p>
+            <p>اسمعي هدول ❤️</p>
+        </div>
+
+        <div class="audio-cards-container">
+            <!-- قائمة الصوتيات المحدثة -->
+            <script>
+                const names = ["بابا", "ماما", "بسام", "اسيل", "رغد", "بيان"];
+                const files = ["baba.mp3", "mama.mp3", "bassam.mp3", "aseel.mp3", "raghad.mp3", "bayan.mp3"];
+                
+                names.forEach((name, i) => {
+                    document.write(`
+                    <div class="audio-card">
+                        <div class="emoji-avatar">❤️</div>
+                        <div class="audio-info">
+                            <h3>${name}</h3>
+                            <div class="progress-track"><div class="progress-fill"></div></div>
+                        </div>
+                        <button class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+                        <audio src="audio/${files[i]}"></audio>
+                    </div>
+                    `);
+                });
+            </script>
+        </div>
+
+        <!-- رسالة ريم -->
+        <div class="text-card">
+            <h3>ريم</h3>
+            <p>عيد ميلاد أغلى الناس 🌸 يا رب اجعل لها في بداية عمرها الجديد اياماً جميلة بقدر جمال روحها ونقاء قلبها🌸 كل عام وانتي بالف خير حبيبة قلبي 🌸 ميوووس 🌸</p>
+        </div>
+
+        <div class="cloud-btn-wrapper" id="next-btn">
+            <div class="cloud-btn">التالي</div>
+        </div>
+    </section>
+
+    <section id="final-screen" class="screen">
+        <div class="final-msg">
+            كل عام وانتي بخير يا احلى ميوسة <br>
+            اليوم يومك انبسطي 💗
+        </div>
+        <div class="cloud-btn-wrapper" onclick="location.reload()">
+            <div class="cloud-btn">البداية</div>
+        </div>
+    </section>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const introScreen = document.getElementById('intro-screen');
+        const mainScreen = document.getElementById('main-screen');
+        const finalScreen = document.getElementById('final-screen');
+
+        startBtn.addEventListener('click', () => {
+            introScreen.classList.add('hide-intro');
+            setTimeout(() => {
+                introScreen.style.display = 'none';
+                mainScreen.classList.add('active');
+            }, 600);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            mainScreen.classList.remove('active');
+            setTimeout(() => {
+                mainScreen.style.display = 'none';
+                finalScreen.classList.add('active');
+            }, 600);
+        });
+
+        // نظام التحكم بالصوت
+        document.querySelectorAll('.audio-card').forEach(card => {
+            const audio = card.querySelector('audio');
+            const btn = card.querySelector('.play-btn');
+            const fill = card.querySelector('.progress-fill');
+
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('audio').forEach(a => { if(a!==audio){ a.pause(); a.parentElement.querySelector('.play-btn').innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; } });
+                if (audio.paused) {
+                    audio.play();
+                    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                } else {
+                    audio.pause();
+                    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                }
+            });
+
+            audio.addEventListener('timeupdate', () => {
+                fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+            });
+        });
+    </script>
+</body>
+</html>
